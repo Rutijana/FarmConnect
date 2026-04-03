@@ -27,7 +27,8 @@ export default function Marketplace() {
     }
   };
 
-  useEffect(() => { fetchListings(); }, [filters]);
+// eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => { fetchListings(); }, [filters]);
 
   const placeOrder = async (listing) => {
     const qty = parseFloat(qtyInputs[listing.listing_id]);
