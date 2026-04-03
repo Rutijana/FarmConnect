@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View, Text, TextInput, TouchableOpacity, ScrollView,
-  StyleSheet, Alert, ActivityIndicator, SafeAreaView, StatusBar
-} from 'react-native';
 
 const API_URL = 'http://10.0.2.2:5000/api'; // For Android emulator
 // If testing on a real phone on the same WiFi, replace with your computer's IP:
