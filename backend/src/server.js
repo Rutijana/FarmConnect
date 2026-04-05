@@ -17,7 +17,12 @@ if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
 // Security & parsing middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://farm-connect-yp7f.vercel.app',
+    'https://farm-connect-yp7f-j2rsdjoku-rutijanas-projects.vercel.app',
+  ],
   credentials: true
 }));
 app.use(express.json());
