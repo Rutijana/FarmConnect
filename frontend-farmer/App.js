@@ -177,43 +177,81 @@ export default function App() {
   // ── SCREENS ────────────────────────────────────────────────────────────────
 
   const LoginScreen = () => (
-    <ScrollView contentContainerStyle={styles.loginContainer}>
-      <Text style={styles.logo}>🌱</Text>
-      <Text style={styles.loginTitle}>{t.appName}</Text>
-      <Text style={styles.loginSubtitle}>{t.loginTitle}</Text>
+  <ScrollView contentContainerStyle={styles.loginContainer}>
+    <Text style={styles.logo}>🌱</Text>
+    <Text style={styles.loginTitle}>{t.appName}</Text>
+    <Text style={styles.loginSubtitle}>
+      {isRegistering ? 'Create Farmer Account' : t.loginTitle}
+    </Text>
 
-      <View style={styles.langRow}>
-        {['en','rw'].map(l => (
-          <TouchableOpacity key={l} onPress={() => setLang(l)}
-            style={[styles.langBtn, lang === l && styles.langBtnActive]}>
-            <Text style={{ color: lang === l ? 'white' : '#333', fontWeight: '600' }}>
-              {l === 'en' ? 'English' : 'Kinyarwanda'}
-            </Text>
-          </TouchableOpacity>
+    <View style={styles.langRow}>
+      {['en','rw'].map(l => (
+        <TouchableOpacity key={l} onPress={() => setLang(l)}
+          style={[styles.langBtn, lang === l && styles.langBtnActive]}>
+          <Text style={{ color: lang === l ? 'white' : '#333', fontWeight: '600' }}>
+            {l === 'en' ? 'English' : 'Kinyarwanda'}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+
+    {isRegistering ? (
+      <>
+        {[
+          ['phone', t.phone, 'phone-pad', '0789123456'],
+          ['name', 'Full Name', 'default', 'Your full name'],
+          ['password', t.password, 'default', '••••••••'],
+          ['district', 'District', 'default', 'e.g. Musanze'],
+          ['sector', 'Sector', 'default', 'e.g. Kinigi'],
+          ['farm_size', 'Farm Size (hectares)', 'numeric', 'e.g. 0.5'],
+        ].map(([key, label, kbType, placeholder]) => (
+          <View key={key}>
+            <Text style={styles.label}>{label}</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType={kbType}
+              placeholder={placeholder}
+              secureTextEntry={key === 'password'}
+              value={registerForm[key]}
+              onChangeText={v => setRegisterForm({ ...registerForm, [key]: v })}
+            />
+          </View>
         ))}
-      </View>
-
-      <Text style={styles.label}>{t.phone}</Text>
-      <TextInput
-        style={styles.input} keyboardType="phone-pad" placeholder="e.g. 0789123456"
-        value={loginForm.phone}
-        onChangeText={v => setLoginForm({ ...loginForm, phone: v })}
-      />
-
-      <Text style={styles.label}>{t.password}</Text>
-      <TextInput
-        style={styles.input} secureTextEntry placeholder="••••••••"
-        value={loginForm.password}
-        onChangeText={v => setLoginForm({ ...loginForm, password: v })}
-      />
-
-      <TouchableOpacity style={styles.primaryBtn} onPress={handleLogin} disabled={loading}>
-        {loading
-          ? <ActivityIndicator color="white" />
-          : <Text style={styles.primaryBtnText}>{t.login}</Text>}
-      </TouchableOpacity>
-    </ScrollView>
-  );
+        <TouchableOpacity style={styles.primaryBtn} onPress={handleRegister} disabled={loading}>
+          {loading
+            ? <ActivityIndicator color="white" />
+            : <Text style={styles.primaryBtnText}>Create Farmer Account</Text>}
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.secondaryBtn} onPress={() => setIsRegistering(false)}>
+          <Text style={styles.secondaryBtnText}>Already have an account? Sign In</Text>
+        </TouchableOpacity>
+      </>
+    ) : (
+      <>
+        <Text style={styles.label}>{t.phone}</Text>
+        <TextInput
+          style={styles.input} keyboardType="phone-pad" placeholder="e.g. 0789123456"
+          value={loginForm.phone}
+          onChangeText={v => setLoginForm({ ...loginForm, phone: v })}
+        />
+        <Text style={styles.label}>{t.password}</Text>
+        <TextInput
+          style={styles.input} secureTextEntry placeholder="••••••••"
+          value={loginForm.password}
+          onChangeText={v => setLoginForm({ ...loginForm, password: v })}
+        />
+        <TouchableOpacity style={styles.primaryBtn} onPress={handleLogin} disabled={loading}>
+          {loading
+            ? <ActivityIndicator color="white" />
+            : <Text style={styles.primaryBtnText}>{t.login}</Text>}
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.secondaryBtn} onPress={() => setIsRegistering(true)}>
+          <Text style={styles.secondaryBtnText}>No account? Register as Farmer</Text>
+        </TouchableOpacity>
+      </>
+    )}
+  </ScrollView>
+);
 
   const HomeScreen = () => {
     const activeListings = listings.filter(l => l.status === 'active').length;
