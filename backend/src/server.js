@@ -17,12 +17,21 @@ if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
 // Security & parsing middleware
 app.use(helmet());
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://farm-connect-yp7f.vercel.app',
-    'https://farm-connect-yp7f-j2rsdjoku-rutijanas-projects.vercel.app',
-  ],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl)
+    if (!origin) return callback(null, true);
+    
+    // Allow localhost
+    if (origin.includes('localhost')) return callback(null, true);
+    
+    // Allow all Vercel deployments
+    if (origin.includes('vercel.app')) return callback(null, true);
+    
+    // Allow Railway
+    if (origin.includes('railway.app')) return callback(null, true);
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json());
